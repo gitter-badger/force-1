@@ -132,7 +132,7 @@ label.ordered {
     border-top: 1px solid black;
 }
 
-#order-table {
+#order-table, #prev-order-table {
     max-width: 450px
 }
 
