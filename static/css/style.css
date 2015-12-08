@@ -132,6 +132,10 @@ label.ordered {
     border-top: 1px solid black;
 }
 
+#order-table {
+    max-width: 450px
+}
+
 #order-table tr, #prev-order-table tr {
     margin: 5px;
 }
