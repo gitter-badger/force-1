@@ -400,7 +400,17 @@ def view_menu():
     all_products = MenuProduct.objects.filter(menu=menu).values_list('product').all_fields()
     all_ordered_products = Order.objects.filter(product__in=all_products, menu=menu)
     ordered_products = Order.objects.filter(product__in=all_products, menu=menu, user=cuser).all_fields()
-    users_ordered = len(set(all_ordered_products.values_list('user')))
+    users_ordered = set(all_ordered_products.values_list('user'))
+    users_ordered_count = len(users_ordered)
+    user_debt = list()
+    for user_ordered in users_ordered:
+        uorders = Order.objects(menu=menu, user=user_ordered).values_list('product', 'count')
+        udebts = [(mt[0].cost, mt[1]) for mt in uorders]
+        total_debt = sum(mc[0]*mc[1] for mc in udebts)
+        user_debt.append({
+            'user': user_ordered.email,
+            'debt': total_debt
+        })
 
     all_prev_products = MenuProduct.objects.filter(menu=prev_menu).values_list('product').all_fields()
     prev_orders = Order.objects.filter(product__in=all_prev_products, menu=prev_menu, user=cuser)
@@ -508,7 +518,8 @@ def view_menu():
                                delivery_cost=delivery_cost,
                                delivery_type=delivery_type,
                                rest=rest,
-                               users_ordered=users_ordered,
+                               user_debt=user_debt,
+                               users_ordered_count=users_ordered_count,
                                user_is_admin=current_user.has_role('admin'))
     else:
         return render_template('500.html'), 500

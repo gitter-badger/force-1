@@ -73,13 +73,13 @@
         <div class="admin-gadgets">
             <h2 class="on-flow-panel">Админские примочки</h2>
             <div>
-                {% if users_ordered > 0 %}
-                {% if users_ordered == 1 %}
-                Заказал один чувак.
-                {% elif users_ordered < 5 %}
-                Заказали {{ users_ordered }} чувака
-                {% elif users_ordered < 21 %}
-                Заказали {{ users_ordered }} чуваков
+                {% if users_ordered_count > 0 %}
+                {% if users_ordered_count == 1 %}
+                Заказал один чувак
+                {% elif users_ordered_count < 5 %}
+                Заказали {{ users_ordered_count }} чувака
+                {% elif users_ordered_count < 21 %}
+                Заказали {{ users_ordered_count }} чуваков
                 {% endif %}
                 {% else %}
                 Никто ничего не заказал
@@ -87,6 +87,11 @@
                 {% if sum_order_cost > 0 %}
                 на {{ sum_order_cost }}&nbsp;₽
                 {% endif %}
+            </div>
+            <div>
+            {% for user in user_debt %}
+            ●&nbsp;{{ user['user'] }} &mdash; {{ user['debt'] }}&nbsp;₽
+            {% endfor %}
             </div>
             <a href="/getmenu">Взять меню</a>
             <a href="/logout">Выйти</a>
