@@ -361,6 +361,8 @@ def get_order_menu_date():
         now = datetime.today() + timedelta(days=2)
     elif now.weekday() == 6:  # sunday
         now = datetime.today() + timedelta(days=1)
+    elif now.weekday() == 4 and now.hour >= 15:
+        now = datetime.today() + timedelta(days=4)
     else:  # weekdays
         if now.hour >= 15:
             now = datetime.today() + timedelta(days=2)
