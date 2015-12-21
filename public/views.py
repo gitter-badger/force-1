@@ -28,6 +28,7 @@ from flask_security.decorators import roles_required
 from flask_security.decorators import login_required
 # from flask_security.decorators import roles_accepted
 
+import json
 from flask import jsonify
 from user.models import User
 from flask.ext.security import current_user
@@ -380,17 +381,20 @@ def menu_date_format(menu_date):
 @bp_public.route('/')
 @login_required
 def view_menu():
-    user_email = request.values.get('ue')
+    user_is_admin = current_user.has_role('admin')
 
-    admin_error = ''
-    if user_email:
-        try:
-            cuser = User.objects.get(email=user_email)
-        except DoesNotExist:
-            admin_error = 'unable to login with user {email}'.format(email=user_email)
+    if user_is_admin:
+        user_email = request.values.get('ue')
+
+        admin_error = ''
+        if user_email:
+            try:
+                cuser = User.objects.get(email=user_email)
+            except DoesNotExist:
+                admin_error = 'unable to login with user {email}'.format(email=user_email)
+                cuser = User.objects.get(id=current_user.id)
+        else:
             cuser = User.objects.get(id=current_user.id)
-    else:
-        cuser = User.objects.get(id=current_user.id)
 
     order_menu_date = get_order_menu_date()
     prev_order_menu_date = get_prev_order_menu_date()
@@ -491,15 +495,15 @@ def view_menu():
         if rest < 0:
             rest = 0
 
-        if sum_order_cost > 1500:
-            delivery_cost = 0.0
-            delivery_type = 'free'
-        elif sum_order_cost > 1000:
-            delivery_cost = 100.0
-            delivery_type = 'cheap'
-        else:
-            delivery_cost = 200.0
-            delivery_type = 'expensive'
+        delivery_info = ((1500, 0.000, 'free'),
+                         (1000, 100.0, 'cheap'),
+                         (0.00, 200.0, 'expensive'))
+
+        for deldata in delivery_info:
+            if sum_order_cost > deldata[0]:
+                delivery_cost = deldata[1]
+                delivery_type = deldata[2]
+                break
 
         rest = 1500 - sum_order_cost
         if rest < 0:
@@ -511,7 +515,6 @@ def view_menu():
                                menu_day=order_menu_date.day,
                                menu_weekday=weekdays[order_menu_date.weekday()],
                                menu_month=months[order_menu_date.month-1],
-                               menu_year=order_menu_date.year,
                                total=total,
                                prev_products=prev_products,
                                prev_total_cost=prev_total_cost,
@@ -522,7 +525,7 @@ def view_menu():
                                rest=rest,
                                user_debt=user_debt,
                                users_ordered_count=users_ordered_count,
-                               user_is_admin=current_user.has_role('admin'))
+                               user_is_admin=user_is_admin)
     else:
         return render_template('500.html'), 500
 
