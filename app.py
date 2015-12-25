@@ -22,6 +22,9 @@ from admin.views import ProductView
 from public.models import Menu
 from admin.views import MenuView
 
+from public.models import MenuProduct
+from admin.views import MenuProductView
+
 from public.models import Order
 from admin.views import OrderView
 
@@ -65,15 +68,17 @@ def register_blueprints(app):
     return None
 
 
-def register_admin_views(admin):
-    admin.add_view(UserView(User))
-    admin.add_view(RoleView(Role))
-    admin.add_view(ProductView(Product))
-    admin.add_view(MenuView(Menu))
-    admin.add_view(OrderView(Order))
-    admin.add_view(CategoryView(Category))
-    admin.add_view(UserDocumentView(UserDocument))
-    admin.add_view(ProductPositionsInXLSView(ProductPositionsInXLS))
+def register_admin_views(adm):
+    admin_views = [UserView(User),
+                   RoleView(Role),
+                   ProductView(Product),
+                   MenuView(Menu),
+                   OrderView(Order),
+                   CategoryView(Category),
+                   UserDocumentView(UserDocument),
+                   MenuProductView(MenuProduct),
+                   ProductPositionsInXLSView(ProductPositionsInXLS)]
+    map(adm.add_view, admin_views)
     return None
 
 

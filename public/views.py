@@ -499,6 +499,8 @@ def view_menu():
                          (1000, 100.0, 'cheap'),
                          (0.00, 200.0, 'expensive'))
 
+        delivery_cost, delivery_type, delivery_title = delivery_info[2]
+
         for deldata in delivery_info:
             if sum_order_cost > deldata[0]:
                 delivery_cost = deldata[1]
