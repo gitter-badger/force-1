@@ -382,19 +382,16 @@ def menu_date_format(menu_date):
 @login_required
 def view_menu():
     user_is_admin = current_user.has_role('admin')
+    cuser = User.objects.get(id=current_user.id)
 
     if user_is_admin:
         user_email = request.values.get('ue')
-
         admin_error = ''
         if user_email:
             try:
                 cuser = User.objects.get(email=user_email)
             except DoesNotExist:
                 admin_error = 'unable to login with user {email}'.format(email=user_email)
-                cuser = User.objects.get(id=current_user.id)
-    else:
-        cuser = User.objects.get(id=current_user.id)
 
     order_menu_date = get_order_menu_date()
     prev_order_menu_date = get_prev_order_menu_date()
