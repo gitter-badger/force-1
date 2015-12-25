@@ -383,10 +383,10 @@ def menu_date_format(menu_date):
 def view_menu():
     user_is_admin = current_user.has_role('admin')
     cuser = User.objects.get(id=current_user.id)
+    admin_error = ''
 
     if user_is_admin:
         user_email = request.values.get('ue')
-        admin_error = ''
         if user_email:
             try:
                 cuser = User.objects.get(email=user_email)
