@@ -87,6 +87,9 @@
                 {% if sum_order_cost > 0 %}
                 на {{ sum_order_cost }}&nbsp;₽
                 {% endif %}
+                {% for user in user_debt %}
+                <p>●&nbsp;{{ user['user'] }} &mdash; {{ user['debt'] }}&nbsp;₽</p>
+                {% endfor %}
             </div>
             <a href="/getmenu">Взять меню</a>
             <a href="/logout">Выйти</a>
