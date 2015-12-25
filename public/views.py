@@ -362,7 +362,7 @@ def get_order_menu_date():
         now = datetime.today() + timedelta(days=2)
     elif now.weekday() == 6:  # sunday
         now = datetime.today() + timedelta(days=1)
-    elif now.weekday() == 4 and now.hour >= 15:
+    elif now.weekday() == 3 and now.hour >= 15:
         now = datetime.today() + timedelta(days=4)
     else:  # weekdays
         if now.hour >= 15:
@@ -393,8 +393,8 @@ def view_menu():
             except DoesNotExist:
                 admin_error = 'unable to login with user {email}'.format(email=user_email)
                 cuser = User.objects.get(id=current_user.id)
-        else:
-            cuser = User.objects.get(id=current_user.id)
+    else:
+        cuser = User.objects.get(id=current_user.id)
 
     order_menu_date = get_order_menu_date()
     prev_order_menu_date = get_prev_order_menu_date()
