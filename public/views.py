@@ -172,6 +172,8 @@ def add_products_from_xls(filename):
                     u'Суп Рыбный': u'Суп рыбный',
                     u'ПАСТА Таглиателли с курицей в сырном соусе': u'Паста тальятелле с курицей в сырном соусе',
                     u'Лапша пшеничная удон с курицей, бульоном и яйцом': u'Лапша пшеничная удон (курица, бульон и яйцо)',
+                    u'Рис Басмати со свининой «по-сычуаньски»': u'Рис басмати со свининой по-сычуански',
+                    u'Мини-сэндвич': u'Мини-cэндвич'
                 }
 
                 for was, then in replacements.iteritems():
@@ -190,9 +192,12 @@ def add_products_from_xls(filename):
                 try:
                     product.save()
                 except flask.ext.mongoengine.mongoengine.NotUniqueError:
-                    product = Product.objects.get(name=product.name,
-                                                  weight=product.weight,
-                                                  cost=product.cost)
+                    try:
+                        product = Product.objects.get(name=product.name,
+                                                      weight=product.weight,
+                                                      cost=product.cost)
+                    except DoesNotExist:
+                        import ipdb; ipdb.set_trace()
                 except bson.errors.InvalidBSON:
                     continue
 
